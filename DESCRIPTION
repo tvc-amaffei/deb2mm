@@ -15,3 +15,4 @@ Description: This package receives an input data-frame and
 License: MIT
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.1.1
