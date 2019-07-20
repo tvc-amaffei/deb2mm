@@ -1,0 +1,17 @@
+Package: deb2mm
+Type: Package
+Title: Mutates a tibble based on rules found in another tibble
+Version: 0.1.0.9001
+Author: Andrew Maffei
+Maintainer: Andrew Maffei <amaffei@thevisualconnection.com>
+Description: This package receives an input data-frame and
+    mutates the contents of it's cells based on the rules
+    presented in a 2nd data-frame. The 'rules' consist
+    of a set of regex match patterns for the columns
+    in the first data-frame. If the row matches a rule
+    then the functions represented in the appended
+    columns are executed and the results included in the
+    cells provided
+License: MIT
+Encoding: UTF-8
+LazyData: true
