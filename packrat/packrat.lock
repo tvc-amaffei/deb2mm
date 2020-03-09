@@ -1,0 +1,214 @@
+PackratFormat: 1.4
+PackratVersion: 0.5.0
+RVersion: 3.6.2
+Repos: CRAN=https://cran.rstudio.com/
+
+Package: BH
+Source: CRAN
+Version: 1.72.0-3
+Hash: fc53be86f0b712d3de03fef95893d710
+
+Package: R6
+Source: CRAN
+Version: 2.4.1
+Hash: b488861d8c3dfac497e041ec911df9fb
+
+Package: Rcpp
+Source: CRAN
+Version: 1.0.3
+Hash: 99f6a1855b2f9434e1399d565d2ed9df
+
+Package: askpass
+Source: CRAN
+Version: 1.1
+Hash: 6f6c430e3cd0dd7d48f447700f4d7e7f
+Requires: sys
+
+Package: assertthat
+Source: CRAN
+Version: 0.2.1
+Hash: 622be49032fe50bd42e96aaef613e209
+
+Package: cli
+Source: CRAN
+Version: 2.0.2
+Hash: 6fc0b39f0fdbe3a025062807019e1180
+Requires: assertthat, crayon, fansi, glue
+
+Package: clipr
+Source: CRAN
+Version: 0.7.0
+Hash: 30cdec6c8cc62c80c485e6bdd0c02b05
+
+Package: crayon
+Source: CRAN
+Version: 1.3.4
+Hash: ff2840dd9b0d563fc80377a5a45510cd
+
+Package: csvy
+Source: CRAN
+Version: 0.3.0
+Hash: 48ce66ac6f6181e65717a6f750d8db80
+Requires: data.table, jsonlite, yaml
+
+Package: data.table
+Source: CRAN
+Version: 1.12.8
+Hash: 283ad0e503ab521300c6d1d02e58d2ae
+
+Package: digest
+Source: CRAN
+Version: 0.6.25
+Hash: ec0a673866797c8c1fc1daa359fb4cad
+
+Package: ellipsis
+Source: CRAN
+Version: 0.3.0
+Hash: 30b58109e4d7c6184a9c2e32f9ae38c6
+Requires: rlang
+
+Package: evaluate
+Source: CRAN
+Version: 0.14
+Hash: 18306cc3bc1aec7b7360eea8a0eb0ee1
+
+Package: fansi
+Source: CRAN
+Version: 0.4.1
+Hash: fc0a252b8e427847d13e89f56ab4665e
+
+Package: glue
+Source: CRAN
+Version: 1.3.1
+Hash: 660bbbe3803c7cf7c9489a7d99a9c0ed
+
+Package: highr
+Source: CRAN
+Version: 0.8
+Hash: 16aa2cc98d7b68c9d148c263c8dcdbcd
+
+Package: hms
+Source: CRAN
+Version: 0.5.3
+Hash: a0709e1b17b4bc1c27f5235177543e07
+Requires: pkgconfig, rlang, vctrs
+
+Package: jsonlite
+Source: CRAN
+Version: 1.6.1
+Hash: bfde5e6072ca0f5226f49e457a9ba62d
+
+Package: knitr
+Source: CRAN
+Version: 1.28
+Hash: 408899ff6416ccf790182c95c8fa9c81
+Requires: evaluate, highr, markdown, stringr, xfun, yaml
+
+Package: lubridate
+Source: CRAN
+Version: 1.7.4
+Hash: 74ce398682545c624d819a6b5c4c461b
+Requires: Rcpp, stringr
+
+Package: magrittr
+Source: CRAN
+Version: 1.5
+Hash: bdc4d48c3135e8f3b399536ddf160df4
+
+Package: markdown
+Source: CRAN
+Version: 1.1
+Hash: 1b6a18fd395589425e338a47b999099f
+Requires: mime, xfun
+
+Package: mime
+Source: CRAN
+Version: 0.9
+Hash: f3388735b4ddea072aff3be44f7f4968
+
+Package: openssl
+Source: CRAN
+Version: 1.4.1
+Hash: b01fe6ae05ec2a30a777dc338af5bf69
+Requires: askpass
+
+Package: packrat
+Source: CRAN
+Version: 0.5.0
+Hash: 498643e765d1442ba7b1160a1df3abf9
+
+Package: pillar
+Source: CRAN
+Version: 1.4.3
+Hash: 64ebcd61a33f2bd9059ffa8a323fd620
+Requires: cli, crayon, fansi, rlang, utf8, vctrs
+
+Package: pkgconfig
+Source: CRAN
+Version: 2.0.3
+Hash: 5ff5f2361851a49534c96caa2a8071c7
+
+Package: rappdirs
+Source: CRAN
+Version: 0.3.1
+Hash: 7340cfebc77ad7b107a549a8635e64dd
+
+Package: readr
+Source: CRAN
+Version: 1.3.1
+Hash: 7dcea00933f9bd8c4d5a154b50762091
+Requires: BH, R6, Rcpp, clipr, crayon, hms, tibble
+
+Package: reticulate
+Source: CRAN
+Version: 1.14
+Hash: c661ac9f2da16aeadcba28d89a5a9e90
+Requires: Rcpp, jsonlite, rappdirs
+
+Package: rlang
+Source: CRAN
+Version: 0.4.4
+Hash: 4b627f82e4297bd5bf82a5cb065bbe4a
+
+Package: stringi
+Source: CRAN
+Version: 1.4.6
+Hash: 076b0f115b37ca6d551ccff96b91114e
+
+Package: stringr
+Source: CRAN
+Version: 1.4.0
+Hash: 67da32dbb2a7a16f2ef124336358e54a
+Requires: glue, magrittr, stringi
+
+Package: sys
+Source: CRAN
+Version: 3.3
+Hash: d5a4afad9298f42aae77f6389713a066
+
+Package: tibble
+Source: CRAN
+Version: 2.1.3
+Hash: f59680d81ddc45fa3fcb8c07686d1d89
+Requires: cli, crayon, fansi, pillar, pkgconfig, rlang
+
+Package: utf8
+Source: CRAN
+Version: 1.1.4
+Hash: f3f97ce59092abc8ed3fd098a59e236c
+
+Package: vctrs
+Source: CRAN
+Version: 0.2.3
+Hash: a3833ff38254ad6ccc66e8406ccd75c3
+Requires: digest, ellipsis, glue, rlang
+
+Package: xfun
+Source: CRAN
+Version: 0.12
+Hash: 1c81f85035dee1e1bf48e09a57928c9b
+
+Package: yaml
+Source: CRAN
+Version: 2.2.1
+Hash: 424bc11cc358f23187feaa7978628196
