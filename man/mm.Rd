@@ -18,39 +18,35 @@ tibble
 Mutate input tibble based on match rules found in a match-mutate tibble
 }
 \examples{
+# This function is based on a python script written by Joe Futrelle (WHOI)
+# and we thank him a lot for that!
 joes_function <- function(string){
-   lookup_tbl <- tribble(
-       ~name, ~val,
-       "AMAFF", "Andrew Maffei",
-       "JFUTR", "Joe Futrelle")
-       ans <- lookup_tbl \%>\%
-           filter (name == string) \%>\%
-           select (val) \%>\%
-           toString()
-   return(ans)
-  }
+  library(stringr)
+  lookup_tbl <- tibble::tribble(
+    ~name, ~val,
+    "AMAFF", "Andrew Maffei",
+    "JFUTR", "Joe Futrelle")
+  ans <- lookup_tbl \%>\%
+    dplyr::filter (name == string) \%>\%
+    dplyr::select (val) \%>\%
+    toString()
+  return(ans)
+}
 
-observed_data_tbl <- tibble::tribble(
-~date, ~expcode, ~desc, ~ref, ~amt,
-"2019-01-01", "5170", "AMAFF-SANFRAN-21320","","329.00",
-"2019-01-02", "5210", "PO# 79342 to Staples", "AMAFF", "92.64",
-"2019-01-03", "5170", "Car Rental Refund","","120.32")
-
-rules_tbl <- tibble::tribble(
-~date, ~expcode, ~desc, ~ref, ~amt, ~category, ~object, ~place, ~po,
-"","(?<expcode>5170)","","","","Travel:Domestic:Unknown","","Woods Hole", "",
-"","(?<expcode>5170)","(?<object>[^-]+)-[^-]+-(?<po>\\\\d{5})","","","Travel:Domestic:{object}","{joes_function(object)}","","{po}",
-"","(?<expcode>5210)","","","","Equipment:Unknown","","","",
-"","(?<expcode>5210)","PO# (?<po>\\\\d{5}) to Staples,(?P<ref>.*)","","Equipment:Staples:{ref}","Staples","","{po}",""
-)
+observed_data_tbl  <- tibble::tribble(
+  ~date, ~expcode, ~desc, ~ref, ~amt,
+  "2019-01-01", "5170", "AMAFF-SANFRAN-21320","","329.00",
+  "2019-01-02", "5210", "PO# 79342 to Staples", "AMAFF", "92.64",
+  "2019-01-03", "5170", "Car Rental Refund","","120.32")
 
 rules_tbl <- tibble::tribble(
-~date, ~expcode, ~desc, ~ref, ~amt, ~category, ~object, ~place, ~po,
-".*", "(?<expcode>5170)", ".*", ".*", ".*", "~'Travel:Domestic:Unknown'",  "", "~'Woods Hole'", "",
-".*", "(?<expcode>5170)", "^([A-Z]+)-([A-Z]+)-([0-9]{5})$", "^(.*)$", ".*", '~paste0("Travel:Domestic:", gr(desc,1))', "~gr(desc,1)", "", "~gr(desc,3)",
-".*", "(?<expcode>5210)", ".*", ".*", ".*", "~'Equipment:Unknown'",  "", "", "",
-".*", "(?<expcode>5210)", "^PO# (?<po>[0-9]{5}) to Staples$", ".*", ".*", '~paste0("Equipment:Staples:", gr(ref,0))', "~'Staples'", "", "~gr(desc,1)"
+  ~date, ~expcode, ~desc, ~ref, ~amt, ~category, ~object, ~place, ~po,
+  "","(?<expcode>5170)","","","","Travel:Domestic:Unknown","","Woods Hole", "",
+  "","(?<expcode>5170)","(?<object>[^-]+)-[^-]+-(?<po>\\\\d{5})","","","Travel:Domestic:{object}","{joes_function(object)}","","{po}",
+  "","(?P<expcode>5210)","","","","Equipment:Unknown","","","",
+  "","(?P<expcode>5210)","PO# (?<po>\\\\d{5}) to Staples,(?<ref>.*)","","Equipment:Staples:{ref}","Staples","","{po}",""
 )
+
 
 result_tbl <- mm(observed_data_tbl, rules_tbl)
 }

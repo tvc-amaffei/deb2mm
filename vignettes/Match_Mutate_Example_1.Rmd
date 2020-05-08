@@ -1,8 +1,10 @@
 ---
 title: "Match Mutate Example 1"
-output:
-  html_document:
-    df_print: paged
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Put the title of your vignette here}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 ## Introduction
 This example shows how the match mutate function work
