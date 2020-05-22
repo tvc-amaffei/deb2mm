@@ -18,8 +18,8 @@ tibble
 Mutate input tibble based on match rules found in a match-mutate tibble
 }
 \examples{
-# This function is based on a python script written by Joe Futrelle (WHOI)
-# and we thank him a lot for that!
+# This function is based on a python script written by Andrew Maffei and
+# Joe Futrelle while they worked at WHOI
 joes_function <- function(string){
   library(stringr)
   lookup_tbl <- tibble::tribble(
@@ -40,13 +40,13 @@ observed_data_tbl  <- tibble::tribble(
   "2019-01-03", "5170", "Car Rental Refund","","120.32")
 
 rules_tbl <- tibble::tribble(
-  ~date, ~expcode, ~desc, ~ref, ~amt, ~category, ~object, ~place, ~po,
-  "","(?<expcode>5170)","","","","Travel:Domestic:Unknown","","Woods Hole", "",
-  "","(?<expcode>5170)","(?<object>[^-]+)-[^-]+-(?<po>\\\\d{5})","","","Travel:Domestic:{object}","{joes_function(object)}","","{po}",
-  "","(?P<expcode>5210)","","","","Equipment:Unknown","","","",
-  "","(?P<expcode>5210)","PO# (?<po>\\\\d{5}) to Staples,(?<ref>.*)","","Equipment:Staples:{ref}","Staples","","{po}",""
+  ~date, ~expcode, ~desc, ~ref, ~amt, ~category, ~object, ~place, ~po, ~destination, ~traveler,
+  "","(?<expcode>5170)","","","","Travel:Domestic:Unknown","","Woods Hole", "","","",
+  "","(?<expcode>5170)","(?<trav>[^-]+)-(<dest>[^-]+)-(?<po>\\\\d{5})","","","Travel:Domestic:{trav}","TravelVendor","","{po}", "{dest}","{joes_function(trav)}",
+  "","(?P<expcode>5210)","","","","Equipment:Unknown","","","","","",
+  "","(?P<expcode>5210)","PO# (?<po>\\\\d{5}) to Staples","(?<ref>.*)","","Equipment:Staples:{ref}","Staples","","{po}","",""
 )
 
 
-result_tbl <- mm(observed_data_tbl, rules_tbl)
+mm(observed_data_tbl, rules_tbl)
 }
