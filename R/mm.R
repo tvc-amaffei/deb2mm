@@ -1,11 +1,11 @@
 #' Mutate input tibble based on match rules found in a match-mutate tibble
 #'
-#' @param input_tbl table of observations to be matched
-#' @param mm_table table of match/replace rules
+#' @param observations_tbl table of observations to be matched
+#' @param match_tbl table of match/replace rules
 #' @return tibble
 #' @examples
-#' # This function is based on a python script written by Joe Futrelle (WHOI)
-#' # and we thank him a lot for that!
+#' # This function is based on a python script written by Andrew Maffei and
+#' # Joe Futrelle while they worked at WHOI
 #' joes_function <- function(string){
 #'   library(stringr)
 #'   lookup_tbl <- tibble::tribble(
@@ -26,78 +26,90 @@
 #'   "2019-01-03", "5170", "Car Rental Refund","","120.32")
 #'
 #' rules_tbl <- tibble::tribble(
-#'   ~date, ~expcode, ~desc, ~ref, ~amt, ~category, ~object, ~place, ~po,
-#'   "","(?<expcode>5170)","","","","Travel:Domestic:Unknown","","Woods Hole", "",
-#'   "","(?<expcode>5170)","(?<object>[^-]+)-[^-]+-(?<po>\\d{5})","","","Travel:Domestic:{object}","{joes_function(object)}","","{po}",
-#'   "","(?P<expcode>5210)","","","","Equipment:Unknown","","","",
-#'   "","(?P<expcode>5210)","PO# (?<po>\\d{5}) to Staples,(?<ref>.*)","","Equipment:Staples:{ref}","Staples","","{po}",""
+#'   ~date, ~expcode, ~desc, ~ref, ~amt, ~category, ~object, ~place, ~po, ~destination, ~traveler,
+#'   "","(?<expcode>5170)","","","","Travel:Domestic:Unknown","","Woods Hole", "","","",
+#'   "","(?<expcode>5170)","(?<trav>[^-]+)-(<dest>[^-]+)-(?<po>\\d{5})","","","Travel:Domestic:{trav}","TravelVendor","","{po}", "{dest}","{joes_function(trav)}",
+#'   "","(?P<expcode>5210)","","","","Equipment:Unknown","","","","","",
+#'   "","(?P<expcode>5210)","PO# (?<po>\\d{5}) to Staples","(?<ref>.*)","","Equipment:Staples:{ref}","Staples","","{po}","",""
 #' )
+#' mm(observed_data_tbl, rules_tbl)
 #'
-#'
-#' result_tbl <- mm(observed_data_tbl, rules_tbl)
 #' @importFrom stringr str_glue_data %>%
 #' @importFrom rematch2 re_match
 #' @importFrom dplyr bind_rows bind_cols select
 #' @export
-mm <- function (input_tbl, mm_table) {
+mm <- function (observations_tbl, match_tbl) {
   # Determine sets of column names
-  input_columns <- colnames(input_tbl)
-  addon_columns <- setdiff(colnames(mm_table), colnames(input_tbl))
-  output_columns <- union(colnames(mm_table), colnames(input_tbl))
+  obs_columns <- colnames(observations_tbl)
+  match_columns <- colnames(match_tbl)
+  addon_columns <-
+    setdiff(colnames(match_tbl), colnames(observations_tbl))
+  output_columns <-
+    union(colnames(match_tbl), colnames(observations_tbl))
 
-  result_rows <- NULL
+  result_tbl <- NULL
 
-  # For each ron in input_tbl, scan all rows of the match table
-  for (irow in 1:nrow(input_tbl)) {
-    # for each input_tbl row
-    # loop through rows in input_tbl
-    i_row <- input_tbl[irow, ]
-    result_row <- NULL
-    for (mrow in 1:nrow(mm_table)) {
+  # For each ron in observations_tbl, scan all rows of the match table
+  # This can not be a vector op because order of rows is important
+  for (irow in 1:nrow(observations_tbl)) {
+    # for each observation row
+    obsvec <-
+      observations_tbl[irow,]     #   grab the observation vector
+    resultvec <-
+      NULL                      #   initialize result vector
+    for (mrow in 1:nrow(match_tbl)) {
+      #   for each row/vector in match tibble
       # look at each mm rule
-      # loop through col names in match mutate table
-      mm_row <- mm_table[mrow, ]
-      namedc <- NULL
+      # loop through obscol names in match vector
+      matchvec <- match_tbl[mrow,]
+      namedcap  <- NULL
       row_matched <- TRUE
-      for (col in input_columns) {
-        # loop through columns, regex match and accumulate named captures
-        regex <- mm_row[col]
+      for (obscol in obs_columns) {
+        # loop through cols found observation vector
+        if (obscol %in% match_columns) {
+          # if col also exists in match vector
+          regex <- matchvec[obscol]       # grab it
+        } else
+          regex <-
+            ""                  # else set it to null string
         if (regex == "") {
           next
         }
-        regex <- paste0("^", regex, "$") # match against whole string
-        m <- re_match(text = i_row[col], pattern = regex)
+        regex <-
+          paste0("^", regex, "$") # polish up the regex to match full string
+        m <-
+          re_match(text = obsvec[obscol], pattern = regex) # check for match
         if (!is.na(m$.match)) {
-          #matched
-          # accumulate named captures
-          if (is.null(namedc)){
-              namedc <- select(m, -c(.text, .match))}
-          else {
-              namedc <- bind_cols(namedc, select(m, -c(.text, .match)))
-              }
+          # observation vector meets match criteria
+          if (is.null(namedcap)) {
+            # grab values of named captures in namedcap
+            namedcap  <- select(m,-c(.text, .match))
+          } else {
+            namedcap  <- bind_cols(namedcap , select(m,-c(.text, .match)))
+          }
         } else {
           # did not match
           row_matched <- FALSE
         }
       }
       if (!row_matched) {
-        # whole row must match
+        # if all the matches in matchvec are not true
         next
       }
       # row matched this rule so continue to add new columns
-      namedc <- bind_cols(i_row, namedc) # add derived named captures to orig col values
-      namedc <- as.list(namedc)
-      for (col in addon_columns) {
-        if (mm_row[col] == "") {
-          # there's no default value, don't fill it in
+      namedcap  <-
+        bind_cols(obsvec, namedcap) # add derived named captures to orig col values
+      namedcap  <- as.list(namedcap)
+      for (addcol in addon_columns) {
+        if (matchvec[addcol] == "") { # not looking for match in this column, go back
           next
         }
         # substitute and evalute R expression contained in cell
-        result_row[col] <- str_glue_data(namedc,toString(mm_row[col]))
+        resultvec[addcol] <-
+          str_glue_data(namedcap , toString(matchvec[addcol]))
       }
     }
-    result_rows <- bind_rows(result_rows,result_row)
+    result_tbl <- bind_rows(result_tbl, resultvec)
   }
-  output_rows <- bind_cols(input_tbl,result_rows)
-  return(output_rows)
+  bind_cols(observations_tbl, result_tbl)
 }
