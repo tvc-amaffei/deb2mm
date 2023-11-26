@@ -1,7 +1,7 @@
 Package: deb2mm
 Type: Package
 Title: Mutates a tibble based on rules found in another tibble
-Version: 0.1.0.9011
+Version: 0.2.0
 Author: Andrew Maffei
 Maintainer: Andrew Maffei <amaffei@thevisualconnection.com>
 Description: This package receives an input data-frame and mutates
