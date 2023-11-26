@@ -1,24 +1,10 @@
----
-title: "Match Mutate Example 1"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Match Mutate Example 1}
-  %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
----
-## Introduction
-This example shows how the match mutate function work
-
-## Load libraries
-```{r}
+## -----------------------------------------------------------------------------
 library(deb2mm)
 library(dplyr)
 library(stringr)
 library(rematch2)
-```
 
-## Define a miscellaneous function in R
-```{r}
+## -----------------------------------------------------------------------------
 joes_function <- function(string){
   lookup_tbl <- tribble(
     ~name, ~val,
@@ -30,20 +16,16 @@ joes_function <- function(string){
       toString()
   return(ans)
 }
-```
 
-## Load Input Table 
-```{r}
+## -----------------------------------------------------------------------------
 observed_data_tbl  <- tibble::tribble(
  ~date, ~expcode, ~desc, ~ref, ~amt,
  "2019-01-01", "5170", "AMAFF-SANFRAN-21320","","329.00",
  "2019-01-02", "5210", "PO# 79342 to Staples", "AMAFF", "92.64",
  "2019-01-03", "5170", "Car Rental Refund","","120.32")
 observed_data_tbl
-```
 
-## Load Match Table
-```{r}
+## -----------------------------------------------------------------------------
 rules_tbl <- tibble::tribble(
  ~date, ~expcode, ~desc, ~ref, ~amt, ~category, ~object, ~place, ~po,
  "","(?<expcode>5170)","","","","Travel:Domestic:Unknown","","Woods Hole", "",
@@ -52,11 +34,8 @@ rules_tbl <- tibble::tribble(
  "","(?P<expcode>5210)","PO# (?<po>\\d{5}) to Staples,(?<ref>.*)","","Equipment:Staples:{ref}","Staples","","{po}",""
  )
 rules_tbl
-```
 
-## Call the mm function
-```{r}
+## -----------------------------------------------------------------------------
 result_tbl <- mm(observed_data_tbl, rules_tbl)
 result_tbl
-```
 
