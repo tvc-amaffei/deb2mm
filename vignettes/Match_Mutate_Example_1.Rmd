@@ -2,7 +2,7 @@
 title: "Match Mutate Example 1"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Put the title of your vignette here}
+  %\VignetteIndexEntry{Match Mutate Example 1}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
