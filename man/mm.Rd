@@ -2,20 +2,20 @@
 % Please edit documentation in R/mm.R
 \name{mm}
 \alias{mm}
-\title{Mutate input tibble based on match rules found in a match-mutate tibble}
+\title{Mutate input tibble based on match rules found in a match-mutate rules tibble}
 \usage{
-mm(input_tbl, mm_table)
+mm(observations_tbl, rules_tbl)
 }
 \arguments{
-\item{input_tbl}{table of observations to be matched}
+\item{observations_tbl}{table of observations to be matched}
 
-\item{mm_table}{table of match/replace rules}
+\item{rules_tbl}{table of match/replace rules}
 }
 \value{
 tibble
 }
 \description{
-Mutate input tibble based on match rules found in a match-mutate tibble
+Mutate input tibble based on match rules found in a match-mutate rules tibble
 }
 \examples{
 # This function is based on a python script written by Andrew Maffei and
@@ -33,20 +33,19 @@ joes_function <- function(string){
   return(ans)
 }
 
-observed_data_tbl  <- tibble::tribble(
+transactions  <- tibble::tribble(
   ~date, ~expcode, ~desc, ~ref, ~amt,
   "2019-01-01", "5170", "AMAFF-SANFRAN-21320","","329.00",
   "2019-01-02", "5210", "PO# 79342 to Staples", "AMAFF", "92.64",
   "2019-01-03", "5170", "Car Rental Refund","","120.32")
 
-rules_tbl <- tibble::tribble(
-  ~date, ~expcode, ~desc, ~ref, ~amt, ~category, ~object, ~place, ~po, ~destination, ~traveler,
-  "","(?<expcode>5170)","","","","Travel:Domestic:Unknown","","Woods Hole", "","","",
-  "","(?<expcode>5170)","(?<trav>[^-]+)-(<dest>[^-]+)-(?<po>\\\\d{5})","","","Travel:Domestic:{trav}","TravelVendor","","{po}", "{dest}","{joes_function(trav)}",
-  "","(?P<expcode>5210)","","","","Equipment:Unknown","","","","","",
-  "","(?P<expcode>5210)","PO# (?<po>\\\\d{5}) to Staples","(?<ref>.*)","","Equipment:Staples:{ref}","Staples","","{po}","",""
+rules <- tibble::tribble(
+  ~date, ~expcode, ~desc, ~ref, ~amt, ~category, ~object, ~xactloc, ~po, ~destination, ~person,
+  "","(?<expcode>5170)","","","","Travel:Domestic:Unknown","Unknown","Unknown", "Unknown","Unknown","Unknown",
+  "","(?<expcode>5170)","(?<person>[^-]+)-(?<dest>[^-]+)-(?<ponum>\\\\d{5})","","","Travel:Domestic:{person}","TravelVendor","WWW","{ponum}", "{dest}","{joes_function({person})}",
+  "","(?<expcode>5210)","Unknown","Unknown","Unknown","Equipment:Unknown","Unknown","Unknown","Unknown","Unknown","Unknown",
+  "","(?<expcode>5210)","PO# (?<ponum>\\\\d{5}) to Staples","(?<person>.*)","","Supplies:Staples:Rocketbooks","Staples","Falmouth","{ponum}","Unknown","{joes_function({person})}"
 )
+mm(transactions, rules)
 
-
-mm(observed_data_tbl, rules_tbl)
 }
