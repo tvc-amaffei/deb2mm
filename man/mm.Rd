@@ -4,12 +4,12 @@
 \alias{mm}
 \title{Mutate input tibble based on match rules found in a match-mutate tibble}
 \usage{
-mm(input_tbl, mm_table)
+mm(observations_tbl, match_tbl)
 }
 \arguments{
-\item{input_tbl}{table of observations to be matched}
+\item{observations_tbl}{table of observations to be matched}
 
-\item{mm_table}{table of match/replace rules}
+\item{match_tbl}{table of match/replace rules}
 }
 \value{
 tibble
@@ -46,7 +46,6 @@ rules_tbl <- tibble::tribble(
   "","(?P<expcode>5210)","","","","Equipment:Unknown","","","","","",
   "","(?P<expcode>5210)","PO# (?<po>\\\\d{5}) to Staples","(?<ref>.*)","","Equipment:Staples:{ref}","Staples","","{po}","",""
 )
-
-
 mm(observed_data_tbl, rules_tbl)
+
 }
